@@ -10,13 +10,19 @@ import { useCallback } from 'react';
 
 export default function App() {
 const pathname = usePathname();
+let numAnda= 0;
+let numConclu= 0;
+
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskStatus, setTaskStatus] = useState<'concluída' | 'em andamento'>('em andamento');
   const [tasks, setTasks] = useState<Task[]>([]);
 
   console.log(tasks);
+  console.log(numConclu);
+  console.log(numAnda);
   
   useEffect(() => {
+    
     const loadTasks = async () => {
       const data = await AsyncStorage.getItem('tasks');
       if (data) {
@@ -25,25 +31,34 @@ const pathname = usePathname();
     };
 
     loadTasks();
+   
   }, []);
 
 
   useEffect(() => {
     AsyncStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
-
+/*
 useFocusEffect(
   useCallback(() => {
-    async function reload() {
-      const data = await AsyncStorage.getItem("tasks");
-      if (data) {
-        setTasks(JSON.parse(data));
+    const reload = async () => {
+      try {
+        const data = await AsyncStorage.getItem("tasks");
+        if (data) {
+          setTasks(JSON.parse(data));
+        }
+        // Se data for null, não faz nada, mantém a lista atual
+      } catch (error) {
+        console.error("Erro ao carregar tarefas:", error);
       }
-    }
+    };
 
     reload();
   }, [])
 );
+*/
+
+
 
   async function addTask() {
     
@@ -58,6 +73,8 @@ useFocusEffect(
     };
 
      setTasks(prev => [...prev, newTask]);
+
+     if (taskStatus === 'em andamento'){numAnda++ }numConclu++
   };
 
    function Limpar() {

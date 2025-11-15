@@ -81,14 +81,10 @@ return(
     // Salvar novamente no AsyncStorage
     await AsyncStorage.setItem("tasks", JSON.stringify(updated));
 
-    /* Atualizar o estado local (opcional)
-    setTask(prev =>
-      prev ? { ...prev, status: newStatus } : prev
-    );*/
 
     // Voltar para a tela anterior
     router.back();
-
+    router.replace("/(tabs)/Index");
     // (Opcional) Forçar refresh da tela anterior
     
 
