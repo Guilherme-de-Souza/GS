@@ -3,15 +3,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Task } from './interface/tasks';
-import { NavigationContainer } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-type Props = NativeStackScreenProps<any>;
-
-
-
-export default function App({ navigation }: Props) {
+export default function App({ navigation }: any) {
     const [screen, setScreen] = useState<'home' | 'outra'>('home');
 
   const [taskTitle, setTaskTitle] = useState<string>('');
@@ -35,9 +31,6 @@ export default function App({ navigation }: Props) {
     AsyncStorage.setItem('TASKS', JSON.stringify(tasks));
   }, [tasks]);
 
-
- 
-
   async function addTask() {
     
       if (!taskTitle.trim()){
@@ -57,10 +50,21 @@ export default function App({ navigation }: Props) {
     await AsyncStorage.clear();
     
   }
+  function MyButton( ) {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity onPress={() => navigation.navigate('editTask')}>
+      <Text>Ir</Text>
+    </TouchableOpacity>
+  );
+}
   
   return (
     <View style={styles.container}>
       
+    <MyButton  />
+    
       <Text style={styles.title}>Gerenciador de Tarefas</Text>
 
       <TextInput
