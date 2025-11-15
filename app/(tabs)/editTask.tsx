@@ -1,24 +1,126 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Task } from './interface/tasks';
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation";
-import { useNavigation } from '@react-navigation/native';
+import { useLocalSearchParams } from "expo-router";
+import React  from 'react';
+import { StyleSheet, Text, View, FlatList , TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from "react";
+import { Task } from "./interface/tasks";
+import { useRouter, router , usePathname} from "expo-router";
 
 
-type editTaskProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'editTask'>;
-};
+export default function EditTask() {
+  const pathname = usePathname();
+  
+    const [task, setTask] = useState<Task | null>(null);
+  
+  const { id } = useLocalSearchParams();
+  const taskId = Array.isArray(id) ? id[0] : id;
 
-export default function editTask() {
+
+  useEffect(() => {
+    if (taskId) {
+      loadTask();
+    }
+  }, [taskId]);
+
+
+  async function loadTask() {
+    const json = await AsyncStorage.getItem("tasks");
+
+    if (!json){
+      setTask(null);
+      return;}
+
+    const tasks: Task[] = JSON.parse(json);
+    const found = tasks.find((t) => {
+  return String(t.id) === String(taskId);
+});
+
+
+    setTask(found || null);
+
 
     
+  }
 
+  function botaoTrocaStatus(){
+  
+if (task?.status === 'em andamento'){
+  return(
+    <View>
+              <TouchableOpacity style={styles.editBtn} onPress={() => editTask('concluída')}>
+        <Text>trocar para concluída</Text>
+          </TouchableOpacity>
+  </View>
+  )
+}
+return(
+    <View>
+              <TouchableOpacity style={styles.editBtn} onPress={() => editTask('em andamento')}>
+        <Text>trocar para em andamento</Text>
+          </TouchableOpacity>
+  </View>
+  );
+}
+    async function editTask(newStatus: string) {
+      if (!taskId) return;
+
+  try {
+    const json = await AsyncStorage.getItem("tasks");
+    if (!json) return;
+
+    const tasks: Task[] = JSON.parse(json);
+
+    // Atualizar a task
+    const updated = tasks.map(t => {
+      if (String(t.id) === String(taskId)) {
+        return { ...t, status: newStatus };
+      }
+      return t;
+    });
+
+    // Salvar novamente no AsyncStorage
+    await AsyncStorage.setItem("tasks", JSON.stringify(updated));
+
+    /* Atualizar o estado local (opcional)
+    setTask(prev =>
+      prev ? { ...prev, status: newStatus } : prev
+    );*/
+
+    // Voltar para a tela anterior
+    router.back();
+
+    // (Opcional) Forçar refresh da tela anterior
+    
+
+  } catch (e) {
+    console.error("Erro ao editar task:", e);
+  }
+
+      
+    }
 
 
       return (
         <View style={styles.container}>
-          <Text style={styles.title}>Editor de Tarefas</Text>
+          <Text style={styles.title}>Editor de Tarefas {id}</Text>
+
+          <View>
+      {task ? (
+        <>
+          <Text>ID: {task.id}</Text>
+          <Text>Título: {task.title}</Text>
+          <Text>Status: {task.status}</Text>
+        </>
+      ) : (
+        <Text>Carregando tarefa...</Text>
+      )}
+      
+    {botaoTrocaStatus()}
+    </View>
+    
+
+
+
           </View>
     );
 }
@@ -28,6 +130,19 @@ export default function editTask() {
 
 
 const styles = StyleSheet.create({
+  editBtn:{
+    marginLeft: 'auto',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginRight: 10,
+    alignSelf: 'flex-end'
+  },
+  view:{
+    
+    flexDirection: 'row',
+    padding: 4,
+  },
   container: {
     flex: 1,
     padding: 20,

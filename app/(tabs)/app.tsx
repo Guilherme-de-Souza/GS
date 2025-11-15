@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 
-import editTask from './editTask';
 import desenvolvimento from './desenvolvimento';
+import editTask from './EditTask';
 
 const Stack = createNativeStackNavigator();
 
