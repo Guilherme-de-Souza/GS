@@ -5,13 +5,14 @@ import { Task } from './interface/tasks';
 import { useRouter, router, usePathname } from "expo-router";
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
+import { Num} from './interface/num';
 
 
-
+let  numAnda= 0;
+let  numConclu=0;
 export default function App() {
 const pathname = usePathname();
-let numAnda= 0;
-let numConclu= 0;
+
 
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskStatus, setTaskStatus] = useState<'concluída' | 'em andamento'>('em andamento');
@@ -74,7 +75,8 @@ useFocusEffect(
 
      setTasks(prev => [...prev, newTask]);
 
-     if (taskStatus === 'em andamento'){numAnda++ }numConclu++
+     if (taskStatus === 'em andamento'){numAnda++; }else{numConclu++
+      }
   };
 
    function Limpar() {
@@ -134,7 +136,10 @@ useFocusEffect(
           <TouchableOpacity style={styles.editBtn}>
               <TouchableOpacity onPress={() => router.push({
             pathname: "/EditTask",
-            params: { id: item.id }})}>
+            params: { id: item.id ,
+              numbAnda: numAnda,
+              numbConclu: numConclu
+            }})}>
         <Text>Editar</Text>
           </TouchableOpacity>
             </TouchableOpacity>

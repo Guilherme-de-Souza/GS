@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import desenvolvimento from './desenvolvimento';
 import editTask from './EditTask';
 import index from './index'
+import { router, usePathname } from 'expo-router';
 
 const Stack = createNativeStackNavigator();
 

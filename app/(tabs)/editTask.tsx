@@ -1,18 +1,15 @@
-import { useLocalSearchParams } from "expo-router";
-import React  from 'react';
-import { StyleSheet, Text, View, FlatList , TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from "react";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 import { Task } from "./interface/tasks";
-import { useRouter, router , usePathname} from "expo-router";
 
 
 export default function EditTask() {
-  const pathname = usePathname();
   
     const [task, setTask] = useState<Task | null>(null);
-  
-  const { id } = useLocalSearchParams();
+  const { id,  } = useLocalSearchParams();
   const taskId = Array.isArray(id) ? id[0] : id;
 
 
@@ -70,6 +67,13 @@ return(
 
     const tasks: Task[] = JSON.parse(json);
 
+if (newStatus === 'em andamento'){
+  //adicionar task
+}
+
+
+
+
     // Atualizar a task
     const updated = tasks.map(t => {
       if (String(t.id) === String(taskId)) {
@@ -81,10 +85,9 @@ return(
     // Salvar novamente no AsyncStorage
     await AsyncStorage.setItem("tasks", JSON.stringify(updated));
 
-
     // Voltar para a tela anterior
     router.back();
-    router.replace("/(tabs)/Index");
+    router.replace("/");
     // (Opcional) Forçar refresh da tela anterior
     
 
@@ -120,7 +123,6 @@ return(
           </View>
     );
 }
-
 
 
 
