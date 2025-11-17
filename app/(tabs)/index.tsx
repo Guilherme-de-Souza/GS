@@ -1,15 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState,  } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View,  } from 'react-native';
-import { Task } from './interface/tasks';
-import { useRouter, router, usePathname } from "expo-router";
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
-import { Num} from './interface/num';
+import { router, usePathname } from "expo-router";
+import React, { useEffect, useState } from 'react';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
+import { Task } from "@/interfaces/tasks";
 
+//let numAnda = 0;
+//let numConclu =0;
 
-let  numAnda= 0;
-let  numConclu=0;
 export default function App() {
 const pathname = usePathname();
 
@@ -17,49 +14,79 @@ const pathname = usePathname();
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskStatus, setTaskStatus] = useState<'concluída' | 'em andamento'>('em andamento');
   const [tasks, setTasks] = useState<Task[]>([]);
+// const [num, setNum] = useState<Num[]>([]);
+ const [numAnda, setNumAnda] = useState(0);
+const [numConclu, setNumConclu] = useState(0);
 
+ // const numeric = Num {
+   // numConcluida: numbConclu,
+   // numAndamento: numAnda,
+  //};
   console.log(tasks);
-  console.log(numConclu);
-  console.log(numAnda);
+  //console.log(numAnda);
+  console.log(numAnda, numConclu);
+  
+  function contarNumeros(tasks: Task[]) {
+  let andamento = 0;
+  let concluida = 0;
+
+  tasks.forEach(task => {
+    if (task.status === "em andamento") andamento++;
+    if (task.status === "concluída") concluida++;
+  });
+
+  setNumAnda(andamento);
+  setNumConclu(concluida);
+}
+  
   
   useEffect(() => {
     
     const loadTasks = async () => {
       const data = await AsyncStorage.getItem('tasks');
+
       if (data) {
-        setTasks(JSON.parse(data));
+        const t = JSON.parse(data);
+      setTasks(t);
+      contarNumeros(t);
       }
-    };
+       
+      }
+    
 
     loadTasks();
    
   }, []);
+  /*
+useEffect(() => {
+  async function loadNumbers() {
+    const data = await AsyncStorage.getItem('numeros');
 
+    if (data) {
+      const parsed = JSON.parse(data);
+      setNumAnda(parsed.numAndamento);
+      setNumConclu(parsed.numConcluida);
+    }
+  }
+
+  loadNumbers();
+}, []);*/
 
   useEffect(() => {
     AsyncStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 /*
-useFocusEffect(
-  useCallback(() => {
-    const reload = async () => {
-      try {
-        const data = await AsyncStorage.getItem("tasks");
-        if (data) {
-          setTasks(JSON.parse(data));
-        }
-        // Se data for null, não faz nada, mantém a lista atual
-      } catch (error) {
-        console.error("Erro ao carregar tarefas:", error);
-      }
+useEffect(() => {
+  const numb = {
+      numConcluida: numConclu,
+      numAndamento: numAnda,
     };
+    console.log(numb);
+    
+        AsyncStorage.setItem('numeros', JSON.stringify(numb));
 
-    reload();
-  }, [])
-);
+}, [numAnda, numConclu]);
 */
-
-
 
   async function addTask() {
     
@@ -74,9 +101,17 @@ useFocusEffect(
     };
 
      setTasks(prev => [...prev, newTask]);
-
-     if (taskStatus === 'em andamento'){numAnda++; }else{numConclu++
-      }
+/*
+     if (taskStatus === 'em andamento'){setNumAnda(prev => prev + 1);
+     }else{setNumConclu(prev => prev + 1);
+     }
+     const numb: Num ={
+       numConcluida: numConclu,
+       numAndamento: numAnda,
+      };
+      setNum([numb]);
+      await AsyncStorage.setItem('numeros',JSON.stringify(numb));*/
+      
   };
 
    function Limpar() {
@@ -94,6 +129,12 @@ useFocusEffect(
     
       <Text style={styles.title}>Gerenciador de Tarefas</Text>
 
+<TouchableOpacity style={styles.statusBtn}
+        onPress={() => router.push({
+            pathname: "/(tabs)/desenvolvimento",})}>
+                <Text>Ver progresso</Text>
+        </TouchableOpacity>
+
       <TextInput
         style={styles.input}
         placeholder="Título da tarefa"
@@ -102,6 +143,7 @@ useFocusEffect(
       />
 
       <View style={styles.statusContainer}>
+        
         <TouchableOpacity
           onPress={() => setTaskStatus('em andamento')}
           style={[styles.statusBtn, taskStatus === 'em andamento' && styles.active]}
@@ -115,6 +157,8 @@ useFocusEffect(
         >
           <Text>Concluída</Text>
         </TouchableOpacity>
+
+        
       </View>
 
       <TouchableOpacity style={styles.addBtn} onPress={addTask}>
@@ -137,8 +181,7 @@ useFocusEffect(
               <TouchableOpacity onPress={() => router.push({
             pathname: "/EditTask",
             params: { id: item.id ,
-              numbAnda: numAnda,
-              numbConclu: numConclu
+
             }})}>
         <Text>Editar</Text>
           </TouchableOpacity>

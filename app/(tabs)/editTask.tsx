@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router, useLocalSearchParams, usePathname } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Task } from "./interface/tasks";
+import { Task } from "@/interfaces/tasks";
 
 
 export default function EditTask() {
@@ -11,6 +11,7 @@ export default function EditTask() {
     const [task, setTask] = useState<Task | null>(null);
   const { id,  } = useLocalSearchParams();
   const taskId = Array.isArray(id) ? id[0] : id;
+  
 
 
   useEffect(() => {
@@ -39,8 +40,9 @@ export default function EditTask() {
     
   }
 
-  function botaoTrocaStatus(){
-  
+   function botaoTrocaStatus(){
+    
+
 if (task?.status === 'em andamento'){
   return(
     <View>
@@ -59,6 +61,8 @@ return(
   );
 }
     async function editTask(newStatus: string) {
+      
+const dataNum = await AsyncStorage.getItem("numeros");
       if (!taskId) return;
 
   try {
@@ -67,9 +71,7 @@ return(
 
     const tasks: Task[] = JSON.parse(json);
 
-if (newStatus === 'em andamento'){
-  //adicionar task
-}
+
 
 
 
@@ -85,10 +87,40 @@ if (newStatus === 'em andamento'){
     // Salvar novamente no AsyncStorage
     await AsyncStorage.setItem("tasks", JSON.stringify(updated));
 
-    // Voltar para a tela anterior
-    router.back();
+  const numb = dataNum ? JSON.parse(dataNum) : {
+    numConcluida: 0,
+    numAndamento: 0
+  };
+
+  let { numConcluida, numAndamento } = numb;
+
+
+  // 6. Atualizar contadores
+  
+
+    // em andamento -> concluída
+    if ( newStatus === "concluída") {
+      numAndamento--;
+      numConcluida++;
+    }
+
+    // concluída -> em andamento
+    if ( newStatus === "em andamento") {
+      numAndamento++;
+      numConcluida--;
+    }
+  
+
+  // 7. salvar novamente no AsyncStorage
+  const updatedNums = {
+    numConcluida,
+    numAndamento
+  };
+
+  await AsyncStorage.setItem("numeros", JSON.stringify(updatedNums));
+
+    //router.back();
     router.replace("/");
-    // (Opcional) Forçar refresh da tela anterior
     
 
   } catch (e) {
