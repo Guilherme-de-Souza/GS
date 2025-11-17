@@ -50,22 +50,22 @@ function contarNumeros(tasks: Task[]) {
   
   return (
   <View style={styles.container}>
-    <TouchableOpacity style={styles.statusBtn}
+    <TouchableOpacity 
             onPress={() => router.push({
                 pathname: "/",})}>
-                    <Text>Voltar</Text>
+                    <Text style={styles.backText}>Voltar</Text>
             </TouchableOpacity>
         <Text style={styles.chartTitle}>Gráfico de Status</Text>
 
         
     <Bar
   data={{
-    labels: ['Concluídas', 'Em andamento'],
+    labels: ['Em andamento', 'Concluídas'],
     datasets: [
       {
         label: 'Tarefas',
-        data: [numConclu, numAnda], // valores
-        backgroundColor: ['#4CAF50', '#FF9800'],
+        data: [numAnda, numConclu], // valores
+        backgroundColor: [ '#FF9800', '#4CAF50'],
       },
     ],
   }}
@@ -74,9 +74,26 @@ function contarNumeros(tasks: Task[]) {
     plugins: {
       legend: {
         display: true,
+         labels: {
+        usePointStyle: true,   // força usar ponto (bolinha)
+        pointStyle: 'circle',  // define tipo
+        padding: 10,
+        boxWidth: 0,           // remove o quadrado
+      }
       },
     },
-  }}
+    
+    
+    layout: {
+      padding: {
+        top: 20,
+        right: 50,
+        bottom: 200,
+        left: 50,
+      },
+    },
+    
+    }}
 />
         
         </View>
@@ -86,7 +103,12 @@ function contarNumeros(tasks: Task[]) {
   }
 
 const styles = StyleSheet.create({
-  
+  backText: {
+    color: '#2351e6ff',
+    fontSize:16,
+    fontWeight: 'bold',
+    marginBottom:20,
+  },
   statusBtn: {
     padding: 10,
     borderWidth: 1,

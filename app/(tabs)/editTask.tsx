@@ -133,14 +133,14 @@ const dataNum = await AsyncStorage.getItem("numeros");
 
       return (
         <View style={styles.container}>
-          <Text style={styles.title}>Editor de Tarefas {id}</Text>
+          <Text style={styles.title}>Editor de Tarefas </Text>
 
           <View>
       {task ? (
         <>
-          <Text>ID: {task.id}</Text>
-          <Text>Título: {task.title}</Text>
-          <Text>Status: {task.status}</Text>
+         
+          <Text style={styles.text}>Título: {task.title}</Text>
+          <Text style={styles.text}>Status: {task.status}</Text>
         </>
       ) : (
         <Text>Carregando tarefa...</Text>
@@ -177,6 +177,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 20,
   },
   title: {
     fontSize: 22,

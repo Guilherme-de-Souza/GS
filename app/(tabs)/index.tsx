@@ -126,15 +126,16 @@ useEffect(() => {
     <View style={styles.container}>
       
     
-    
+    <View style={styles.view}>
+
       <Text style={styles.title}>Gerenciador de Tarefas</Text>
 
-<TouchableOpacity style={styles.statusBtn}
+<TouchableOpacity style={styles.progressBtn}
         onPress={() => router.push({
             pathname: "/(tabs)/desenvolvimento",})}>
-                <Text>Ver progresso</Text>
+                <Text style={styles.addText}>Ver progresso</Text>
         </TouchableOpacity>
-
+</View>
       <TextInput
         style={styles.input}
         placeholder="Título da tarefa"
@@ -197,6 +198,14 @@ useEffect(() => {
 }
 
 const styles = StyleSheet.create({
+  progressBtn:{
+    backgroundColor: '#5ec775ff',
+    marginLeft: 'auto',
+    padding: 15,
+    borderRadius: 8,
+    alignSelf: 'flex-end'
+    
+  },
   editBtn:{
     marginLeft: 'auto',
     padding: 10,
