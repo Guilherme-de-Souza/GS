@@ -7,6 +7,18 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 1. Install dependencies
 
    ```bash
+npm install -g expo-cli
+npm install @react-native-async-storage/async-storage
+npm install expo-router
+npm install react-native-safe-area-context
+npm install react-native-screens
+npm install -g expo-cli
+npm install @react-navigation/native
+expo install react-native-screens react-native-safe-area-context
+npm install @react-navigation/native-stack
+npm install chart.js react-chartjs-2
+
+
    npm install
    ```
 
