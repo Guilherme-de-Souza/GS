@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text,  TouchableOpacity,  StyleSheet } from 'react-native';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

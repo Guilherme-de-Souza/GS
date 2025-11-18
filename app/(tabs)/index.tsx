@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
 import { Task } from "@/interfaces/tasks";
 
-//let numAnda = 0;
-//let numConclu =0;
 
 export default function App() {
 const pathname = usePathname();
@@ -14,16 +12,10 @@ const pathname = usePathname();
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskStatus, setTaskStatus] = useState<'concluída' | 'em andamento'>('em andamento');
   const [tasks, setTasks] = useState<Task[]>([]);
-// const [num, setNum] = useState<Num[]>([]);
  const [numAnda, setNumAnda] = useState(0);
 const [numConclu, setNumConclu] = useState(0);
 
- // const numeric = Num {
-   // numConcluida: numbConclu,
-   // numAndamento: numAnda,
-  //};
   console.log(tasks);
-  //console.log(numAnda);
   console.log(numAnda, numConclu);
   
   function contarNumeros(tasks: Task[]) {
@@ -57,36 +49,12 @@ const [numConclu, setNumConclu] = useState(0);
     loadTasks();
    
   }, []);
-  /*
-useEffect(() => {
-  async function loadNumbers() {
-    const data = await AsyncStorage.getItem('numeros');
-
-    if (data) {
-      const parsed = JSON.parse(data);
-      setNumAnda(parsed.numAndamento);
-      setNumConclu(parsed.numConcluida);
-    }
-  }
-
-  loadNumbers();
-}, []);*/
+  
 
   useEffect(() => {
     AsyncStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
-/*
-useEffect(() => {
-  const numb = {
-      numConcluida: numConclu,
-      numAndamento: numAnda,
-    };
-    console.log(numb);
-    
-        AsyncStorage.setItem('numeros', JSON.stringify(numb));
 
-}, [numAnda, numConclu]);
-*/
 
   async function addTask() {
     
@@ -101,16 +69,7 @@ useEffect(() => {
     };
 
      setTasks(prev => [...prev, newTask]);
-/*
-     if (taskStatus === 'em andamento'){setNumAnda(prev => prev + 1);
-     }else{setNumConclu(prev => prev + 1);
-     }
-     const numb: Num ={
-       numConcluida: numConclu,
-       numAndamento: numAnda,
-      };
-      setNum([numb]);
-      await AsyncStorage.setItem('numeros',JSON.stringify(numb));*/
+
       
   };
 
